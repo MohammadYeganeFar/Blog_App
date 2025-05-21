@@ -1,11 +1,26 @@
-Custom_user section, Timestamp model:
-	Mohammad Hossein: branch ---> feature/Custom_user_and_Timstamp_section
-		
-Author mosectiondel:
-	Reyhane Zavare: branch ---> feature/Author_section
-	
-Reader section:
-	Farbod Nezafati: branch ---> feature/Reader_section
-	
-Post section:
-	Mohammad Yegane far: branch ---> feature/Post_section
+## Contributors
+
+---
+
+### Mohammad Hossein
+- **Sections:** Custom User, Timestamp Model  
+- **Branch:** `feature/Custom_user_and_Timestamp_section`
+
+---
+
+### Reyhane Zavare
+- **Section:** Author  
+- **Branch:** `feature/Author_section`
+
+---
+
+### Farbod Nezafati
+- **Section:** Reader  
+- **Branch:** `feature/Reader_section`
+
+---
+
+### Mohammad Yegane Far
+- **Section:** Post  
+- **Branch:** `feature/Post_section`
+
