@@ -15,3 +15,20 @@ def custom_user_login(request):
             username=username,
             password=password
             )
+            if user :
+                login(request, user)
+                context =  {'form': form, 'custom_message': f'welcome {user.username}'}
+            else:
+                context = {'form': form, 'custom_message': 'wrong data!'}
+        else:
+            context = {'form': form, 'custom_message': 'wrong form!'}
+            
+            
+        return render(request, 'user/custom_login.html', context=context) 
+    
+    form = CustomLoginForm()
+    context = {'form': form}
+    
+    return render(request, 'user/custom_login.html', context=context)        
+            
+
