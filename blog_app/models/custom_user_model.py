@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
@@ -11,17 +12,15 @@ class TimeStampModel(models.Model):
         abstract = True
 
 
-class CustomUserModel(TimeStampModel):
-    first_name = models.CharField(max_length=120, blank=False, null=False)
-    last_name = models.CharField(max_length=120, blank=False, null=False)
-    email = models.EmailField(unique=True, blank=False, null=False)
-    username = models.CharField(max_length=150, unique=True, blank=False, null=False)
+class CustomUserModel(TimeStampModel, AbstractUser):
+    bio = models.TextField(null=True, blank=True)
+    profile_image = models.ImageField(null=True, blank=True)
 
     def get_full_name(self):
-        return f"{self.fname} {self.lname}"
+        return f"{self.first_name} {self.last_name}"
     
     def get_short_name(self):
-        return self.fname
+        return self.first_name
     
     def __str__(self):
         return self.get_full_name()
