@@ -12,8 +12,7 @@ class TimeStampModel(models.Model):
         abstract = True
 
 
-class CustomUserModel(TimeStampModel):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+class CustomUserModel(TimeStampModel, AbstractUser):
     bio = models.TextField(null=True, blank=True)
     profile_image = models.ImageField(null=True, blank=True)
 
