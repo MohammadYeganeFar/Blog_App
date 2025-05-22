@@ -14,7 +14,7 @@ class TimeStampModel(models.Model):
 
 class CustomUserModel(TimeStampModel, AbstractUser):
     bio = models.TextField(null=True, blank=True)
-    profile_image = models.ImageField(null=True, blank=True)
+    profile_image = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
 
     def get_full_name(self):
         return f"{self.first_name} {self.last_name}"
