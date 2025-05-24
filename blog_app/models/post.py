@@ -16,7 +16,7 @@ class Post(TimeStampModel):
         choices=STATUS_CHOICES,
         default='Drafted'
     )
-    tags = models.ManyToManyField(Tag, on_delete=models.CASCADE)
+    tags = models.ManyToManyField(Tag)
     is_published = models.BooleanField(default=False)
     
     def __str__(self):
