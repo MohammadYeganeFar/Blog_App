@@ -1,10 +1,18 @@
 __all__ = [
-    'CustomUserModel',
+    'CustomUser',
     'TimeStampModel',
-    'PostModel',
-    'ContactUsModel']
+    'Post',
+    'ContactUs',
+    'Comment',
+    'Tag',
+    'Like',
+    'BaseAdmin']
 
-from blog_app.models.custom_user_model import CustomUserModel
-from blog_app.models.custom_user_model import TimeStampModel
-from blog_app.models.contact_us_model import ContactUsModel
-from blog_app.models.post_model import PostModel
+from blog_app.models.custom_user import CustomUser
+from blog_app.models.custom_user import TimeStampModel
+from blog_app.models.contact_us import ContactUs
+from blog_app.models.post import Post
+from blog_app.models.comment import Comment
+from blog_app.models.tag import Tag
+from blog_app.models.comment import Like
+from blog_app.models.base_admin import BaseAdmin
