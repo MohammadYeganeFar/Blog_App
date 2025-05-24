@@ -1,9 +1,9 @@
 from django.shortcuts import render
-from blog_app.models.post_model import PostModel
+from blog_app.models.post_model import Post
 
 
 def list_post(request):
-    posts = PostModel.objects.all()
+    posts = Post.objects.all()
     context = {'posts': posts}
     return render(
         request,
