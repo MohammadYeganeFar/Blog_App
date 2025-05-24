@@ -10,7 +10,7 @@ STATUS_CHOICES = ('Status',['Published', 'Archived', 'Drafted'])
 class Post(TimeStampModel):
     content = models.TextField()     
     title = models.CharField(max_length=255)
-    author = models.ForeignKey(CustomUserModel, on_delete=models.CASCADE)
+    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     status = models.CharField(
         max_length=10,
         choices=STATUS_CHOICES,
