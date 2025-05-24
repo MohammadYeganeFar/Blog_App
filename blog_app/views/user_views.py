@@ -6,10 +6,10 @@ from blog_app.forms.user.login import CustomLoginForm
 
 def custom_user_login(request):
     if request.method == 'POST':
-        form = custom_user_login(request.POST)
+        form = CustomLoginForm(request.POST)            
         if form.is_valid():
-            username = form.cleaned_data.get(username)
-            password = form.cleaned_data.get(password)
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
             user = authenticate(
             request=request,
             username=username,
@@ -17,13 +17,13 @@ def custom_user_login(request):
             )
             if user :
                 login(request, user)
-                context =  {'form': form, 'custom_message': f'welcome {user.username}'}
+                message = f'welcome {user.username}'
             else:
-                context = {'form': form, 'custom_message': 'wrong data!'}
+                message = 'wrong data!'
         else:
-            context = {'form': form, 'custom_message': 'wrong form!'}
+            message = 'wrong form!'
             
-            
+        context = {'form': form, 'message': message}   
         return render(request, 'user/custom_login.html', context=context) 
     
     form = CustomLoginForm()
