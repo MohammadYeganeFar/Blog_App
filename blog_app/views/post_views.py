@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from blog_app.models.post_model import Post
+from blog_app.models.post import Post
 
 
 def list_post(request):
