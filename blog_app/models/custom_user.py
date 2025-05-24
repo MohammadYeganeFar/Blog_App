@@ -12,7 +12,7 @@ class TimeStampModel(models.Model):
         abstract = True
 
 
-class CustomUserModel(TimeStampModel, AbstractUser):
+class CustomUser(TimeStampModel, AbstractUser):
     bio = models.TextField(null=True, blank=True)
     profile_image = models.ImageField(null=True, blank=True)
 
