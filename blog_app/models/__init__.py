@@ -1,7 +1,7 @@
 __all__ = [
     'CustomUser',
     'TimeStampModel',
-    'PostModel',
+    'Post',
     'ContactUs',
     'Comment']
 
