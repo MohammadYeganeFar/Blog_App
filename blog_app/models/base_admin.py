@@ -2,7 +2,7 @@ from django.contrib import admin
 
 class BaseAdmin(admin.ModelAdmin):
     
-    list_display = []
-    list_filter = []
-    search_fields = []
+    list_display = tuple()
+    list_filter = tuple()
+    search_fields = tuple()
     
