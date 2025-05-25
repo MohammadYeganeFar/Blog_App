@@ -4,7 +4,7 @@ from django.contrib import messages
 #from  blog_app.forms.user_registration import UserRegistration
 
 
-# def register_user(request):
+# def user_register(request):
 #     if request.user.is_authenticated:
 #         messages.info(request, "You are already logged in.")
 #         return redirect('blog_app:list_post')
