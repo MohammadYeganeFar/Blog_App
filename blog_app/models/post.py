@@ -1,8 +1,9 @@
 from django.db import models
-from blog_app.models.custom_user import TimeStampModel, CustomUser
-from blog_app.models.tag import Tag
+from blog_app.models.user import TimeStampModel, CustomUser
 
 
+class Tag(models.Model):
+    tag_name = models.CharField(max_length=10)
 
 
 class Post(TimeStampModel):
@@ -24,3 +25,14 @@ class Post(TimeStampModel):
     
     def __str__(self):
         return f'{self.title}'
+    
+
+class Comment(TimeStampModel):
+    post = models.ForeignKey(Post, related_name='comments', on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    content = models.TextField()
+
+
+class Like(TimeStampModel):
+    post = models.ForeignKey(Post, related_name='likes', on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
