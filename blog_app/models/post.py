@@ -1,8 +1,9 @@
 from django.db import models
 from blog_app.models.custom_user import TimeStampModel, CustomUser
-from blog_app.models.tag import Tag
 
 
+class Tag(models.Model):
+    tag_name = models.CharField(max_length=10)
 
 
 class Post(TimeStampModel):
