@@ -24,3 +24,14 @@ class Post(TimeStampModel):
     
     def __str__(self):
         return f'{self.title}'
+    
+
+class Comment(TimeStampModel):
+    post = models.ForeignKey(Post, related_name='comments', on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    content = models.TextField()
+
+
+class Like(TimeStampModel):
+    post = models.ForeignKey(Post, related_name='likes', on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
