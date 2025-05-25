@@ -1,6 +1,6 @@
 __all__ = ['ContactUsForm',
-           'Comment']
+           'CommentForm']
 
 from blog_app.forms.contact_us import ContactUsForm
-from blog_app.forms.comment import Comment
+from blog_app.forms.comment import CommentForm
 
