@@ -1,5 +1,5 @@
 from django import forms
-from blog_app.models.custom_user import CustomUser
+from blog_app.models.user import CustomUser
 
 
 class UserProfile(forms.ModelForm):

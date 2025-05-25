@@ -1,5 +1,5 @@
 from django.db import models
-from blog_app.models.custom_user import TimeStampModel, CustomUser
+from blog_app.models.user import TimeStampModel, CustomUser
 
 
 class Tag(models.Model):

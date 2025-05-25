@@ -1,7 +1,7 @@
 from django import forms
 # from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm, SetPasswordForm, PasswordChangeForm
 from django.core.exceptions import ValidationError
-from blog_app.models.custom_user import CustomUser
+from blog_app.models.user import CustomUser
 
 
 class UserRegistration(forms.ModelForm):
