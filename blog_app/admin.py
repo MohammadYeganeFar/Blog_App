@@ -11,7 +11,10 @@ class CustomUserAdmin(BaseAdmin):
  
 @admin.register(Post)
 class PostAdmin(BaseAdmin):
-    pass
+   list_display = ('title', 'author', 'status', 'is_published', 'created_at')
+   search_fields = ('title', 'content', 'author')
+   list_filter = ('status', 'tags', 'author')
+
 
 
 @admin.register(Tag)
