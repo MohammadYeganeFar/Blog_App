@@ -12,7 +12,7 @@ from django.contrib import messages
 # def user_register(request):
 #     if request.user.is_authenticated:
 #         messages.info(request, "You are already logged in.")
-#         return redirect('blog_app:list_post')
+#         return redirect('blog_app:post_list')
     
 #     if request.method == 'POST':
 #         form = UserRegisterForm(request.POST)
@@ -20,7 +20,7 @@ from django.contrib import messages
 #             user = form.save()
 #             login(request, user, backend='django.contrib.auth.backends.ModelBackend')
 #             messages.success(request, f'Registration successful, {user.username}! You are now logged in.')
-#             return redirect('blog_app:list_post')
+#             return redirect('blog_app:post_list')
         
 #         else:
 #             error_messages = []
@@ -75,7 +75,7 @@ def user_logout(request):
     else:
         messages.info(request, "You are not currently logged in.")
     
-    return redirect('blog_app:list_post')
+    return redirect('blog_app:post_list')
 
 def user_profile(request, user_id):
     profile_user = get_object_or_404(CustomUser, pk=user_id)
