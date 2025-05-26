@@ -36,3 +36,9 @@ class Comment(TimeStampModel):
 class Like(TimeStampModel):
     post = models.ForeignKey(Post, related_name='likes', on_delete=models.CASCADE)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('post', 'user')
+
+    def __str__(self):
+        return f'Like by {self.user.username} on {self.post.title}'
