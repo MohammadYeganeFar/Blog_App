@@ -1,6 +1,7 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login # not yet added ours I add our login later
 from django.contrib.auth import logout
+from blog_app.models import CustomUser, Post
 
 
 
@@ -48,3 +49,16 @@ def user_logout(request):
         messages.info(request, "You are not currently logged in.")
     
     return redirect('blog_app:list_post')
+
+def user_profile(request, user_id):
+    profile_user = get_object_or_404(CustomUser, pk=user_id)
+    user_posts = Post.objects.filter(
+        author=profile_user,
+        status='published'
+        ).order_by('-created_at')
+
+    context = {
+    'profile_user': profile_user,
+    'user_posts': user_posts,
+    }
+    return render(request, 'user/profile_detail.html', context) # I will add this 'user/profile_detail.html' later
