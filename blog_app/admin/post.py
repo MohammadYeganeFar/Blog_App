@@ -15,7 +15,9 @@ class PostAdmin(BaseAdmin):
 
 @admin.register(Like)
 class LikeAdmin(BaseAdmin):
-    pass
+    list_display = ('user_name', 'title', 'created_at')
+    search_fields = ('user_name', 'title')
+    list_filter = ('created_at', 'author')
 
 
 @admin.register(Tag)
