@@ -33,10 +33,27 @@ def like_post(request, slug):
     return JsonResponse({'liked':liked, 'like_count': like_count})
 
 
-def post_detail(request, post_id):
-    post = get_object_or_404(Post, id=post_id)
+def post_detail(request, slug):
+    post = get_object_or_404(Post, slug=slug)
+
+    recently_viewed_posts_slugs = request.session.get('recently_viewed', [])
+
+    if post.slug not in recently_viewed_posts_slugs:
+        recently_viewed_posts_slugs.insert(0, post.slug)
+        request.session['recently_viewed'] = recently_viewed_posts_slugs[:5] 
+
+    recent_posts_objects = Post.objects.filter(
+        slug__in=request.session.get('recently_viewed', []), 
+        status='published'
+    ).order_by('created_at') 
+
+    context = {
+        'post': post,
+        'recently_viewed_posts': recent_posts_objects,
+    }
+    print(recent_posts_objects)
     return render(
         request,
         'blog_app/post/detail.html',
-        context={'post': post}
+        context=context
     )
