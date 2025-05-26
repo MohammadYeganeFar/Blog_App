@@ -76,7 +76,7 @@ def user_logout(request):
     else:
         messages.info(request, "You are not currently logged in.")
     
-    return redirect('blog_app:list_post')
+    return redirect('blog_app:post_list')
 
 
 def user_profile(request, user_id):
