@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.text import slugify
 from blog_app.models.user import TimeStampModel, CustomUser
 
 
@@ -14,6 +15,7 @@ class Post(TimeStampModel):
         }
     content = models.TextField()     
     title = models.CharField(max_length=255)
+    slug = models.SlugField(max_length=255, unique=True, blank=True)
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     status = models.CharField(
         max_length=10,
@@ -26,6 +28,17 @@ class Post(TimeStampModel):
     def __str__(self):
         return f'{self.title}'
     
+    def save(self, *args, **kwargs):
+        if not self.slug and self.title:
+            self.slug = slugify(self.title)
+            
+            original_slug = self.slug
+            counter = 1
+            while Post.objects.filter(slug=self.slug).exclude(pk=self.pk).exists():
+                self.slug = f'{original_slug}-{counter}'
+                counter += 1
+        super().save(*args, **kwargs)
+
 
 class Comment(TimeStampModel):
     post = models.ForeignKey(Post, related_name='comments', on_delete=models.CASCADE)
