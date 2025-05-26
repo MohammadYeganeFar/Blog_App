@@ -22,4 +22,8 @@ class LikeAdmin(BaseAdmin):
 
 @admin.register(Tag)
 class TagAdmin(BaseAdmin):
-    pass
+    list_display = ('user_name', 'created_at')
+    search_fields = ('user_name')
+    list_filter = ('created_at','user_name')
+    
+    

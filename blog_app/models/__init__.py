@@ -15,4 +15,3 @@ from blog_app.models.post import Post
 from blog_app.models.comment import Comment
 from blog_app.models.tag import Tag
 from blog_app.models.comment import Like
-from blog_app.models.base_admin import BaseAdmin
