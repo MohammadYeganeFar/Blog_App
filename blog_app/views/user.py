@@ -1,5 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login # not yet added ours I add our login later
+from django.contrib.auth import logout
+
+
+
 from django.contrib import messages
 #from  blog_app.forms.user_registration import UserRegistration
 
@@ -35,3 +39,12 @@ from django.contrib import messages
 #         form = UserRegisterForm()
     
 #     return render(request, 'user/register.html', {'form': form}) # user/register.html will be added soon
+
+def user_logout(request):
+    if request.user.is_authenticated:
+        logout(request)
+        messages.success(request, "You have been successfully logged out.")
+    else:
+        messages.info(request, "You are not currently logged in.")
+    
+    return redirect('blog_app:list_post')
