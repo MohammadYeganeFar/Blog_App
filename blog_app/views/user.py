@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import login # not yet added ours I add our login later
-from django.contrib.auth import logout
+from django.contrib.auth import logout, authenticate, login # not yet added ours I add our login later 
 from blog_app.models import CustomUser, Post
+from blog_app.forms.user.login import CustomLoginForm
 
 
 
@@ -40,6 +40,33 @@ from django.contrib import messages
 #         form = UserRegisterForm()
     
 #     return render(request, 'user/register.html', {'form': form}) # user/register.html will be added soon
+
+def custom_user_login(request):
+    if request.method == 'POST':
+        form = CustomLoginForm(request.POST)            
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(
+            request=request,
+            username=username,
+            password=password
+            )
+            if user :
+                login(request, user)
+                message = f'welcome {user.username}'
+            else:
+                message = 'wrong data!'
+        else:
+            message = 'wrong form!'
+            
+        context = {'form': form, 'message': message}   
+        return render(request, 'user/custom_login.html', context=context) 
+    
+    form = CustomLoginForm()
+    context = {'form': form}
+    
+    return render(request, 'user/custom_login.html', context=context) 
 
 def user_logout(request):
     if request.user.is_authenticated:
