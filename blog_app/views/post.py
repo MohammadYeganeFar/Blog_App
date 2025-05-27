@@ -1,10 +1,42 @@
 from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
+from django.contrib import messages
+from django.urls import reverse
 from blog_app.models import Post, Like
+from blog_app.forms.post import Post as PostForm
 
 
+def create_post(request):
+    user = request.user
+    if request.method == "POST":
+        form = PostForm(request.POST)
+
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = user
+            post.save()
+            return redirect(
+                reverse(
+                    'blog_app:post_detail',
+                    args=[user.username, post.slug]))
+        else:
+            messages.error(request, 'Invalid form!')
+            return render(
+                request,
+                'blog_app/post/create_post.html',
+                {'form': form}
+            )
+    else:
+        form = PostForm()
+        return render(
+            request,
+            'blog_app/post/create_post.html',
+            {'form': form}
+        )
+
+        
 def post_list(request):
     posts = Post.objects.all()
     context = {'posts': posts}
@@ -32,8 +64,7 @@ def like_post(request, slug):
 
     return JsonResponse({'liked':liked, 'like_count': like_count})
 
-
-def post_detail(request, slug):
+def post_detail(request, user, slug):
     post = get_object_or_404(Post, slug=slug)
 
     recently_viewed_posts_slugs = request.session.get('recently_viewed', [])
@@ -51,7 +82,6 @@ def post_detail(request, slug):
         'post': post,
         'recently_viewed_posts': recent_posts_objects,
     }
-    print(recent_posts_objects)
     return render(
         request,
         'blog_app/post/detail.html',

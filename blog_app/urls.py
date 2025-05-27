@@ -6,5 +6,6 @@ from blog_app.views import user
 urlpatterns = [
     path('posts/', post.post_list, name='post_list'),
     path('login/', user.custom_user_login, name='login'),
-    path('<slug:slug>/', post.post_detail, name='post_detail')
+    path('@<str:user>/<slug:slug>/', post.post_detail, name='post_detail'),
+    path('new/', post.create_post, name='create_post')
 ]
