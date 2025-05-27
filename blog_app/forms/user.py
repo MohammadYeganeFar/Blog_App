@@ -1,5 +1,11 @@
 from django import forms
-# from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm, SetPasswordForm, PasswordChangeForm
+
+
+class CustomLoginForm(forms.Form):
+    username = forms.CharField(max_length=150)
+    password = forms.CharField(max_length=150)
+
+
 from django.core.exceptions import ValidationError
 from blog_app.models.user import CustomUser
 
@@ -12,3 +18,11 @@ class UserRegistration(forms.ModelForm):
         model = CustomUser
         fields = ['username', 'email', 'password']
 
+    
+from blog_app.models.user import CustomUser
+
+
+class UserProfile(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'email', 'bio', 'profile_image']
