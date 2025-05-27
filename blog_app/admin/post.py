@@ -15,15 +15,15 @@ class PostAdmin(BaseAdmin):
 
 @admin.register(Like)
 class LikeAdmin(BaseAdmin):
-    list_display = ('username', 'title', 'created_at')
-    search_fields = ('username', 'title')
-    list_filter = ('created_at', 'author')
+    list_display = ('user', 'post')
+    search_fields = ('user', 'post')
+    list_filter = ('user',)
 
 
-@admin.register(Tag)
-class TagAdmin(BaseAdmin):
-    list_display = ('tag_name', 'created_at')
-    search_fields = ('tag_name')
-    list_filter = ('created_at')
+# @admin.register(Tag)
+# class TagAdmin(BaseAdmin):
+#     list_display = ('tag_name', 'created_at')
+#     search_fields = ('tag_name')
+#     list_filter = ('created_at')
     
     
