@@ -3,7 +3,7 @@ from blog_app.admin import BaseAdmin
 from blog_app.models import Post
 from blog_app.models import Like
 from blog_app.models import Tag
-
+from blog_app.models import Comment
  
 @admin.register(Post)
 class PostAdmin(BaseAdmin):
@@ -27,3 +27,9 @@ class TagAdmin(BaseAdmin):
     list_filter = ('tag_name',)
     
     
+@admin.register(Comment)
+class CommentAdmin(BaseAdmin):
+    pass
+    
+
+ 
