@@ -20,10 +20,10 @@ class LikeAdmin(BaseAdmin):
     list_filter = ('user',)
 
 
-# @admin.register(Tag)
-# class TagAdmin(BaseAdmin):
-#     list_display = ('tag_name', 'created_at')
-#     search_fields = ('tag_name')
-#     list_filter = ('created_at')
+@admin.register(Tag)
+class TagAdmin(BaseAdmin):
+    list_display = ('tag_name',)
+    search_fields = ('tag_name',)
+    list_filter = ('tag_name',)
     
     
