@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import logout, authenticate, login
 from blog_app.models import CustomUser, Post
-from blog_app.forms.user.login import CustomLoginForm
+from blog_app.forms.user import CustomLoginForm
 from blog_app.forms import UserProfile
 from django.contrib import messages
-from blog_app.forms.user_registration import UserRegistration
+from blog_app.forms.user import UserRegistration
 from django.contrib.auth.decorators import login_required
 
 

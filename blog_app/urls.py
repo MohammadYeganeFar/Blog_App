@@ -9,17 +9,12 @@ app_name = 'blog_app'
 urlpatterns = [
     path('', post.post_list, name='post_list_root'),
     path('posts/', post.post_list, name='post_list'),
-    path('posts/new/', post.create_post, name='create_post'),
     path('posts/<slug:slug>/', post.post_detail, name='post_detail'),
-    path('posts/<slug:slug>/edit/', post.edit_post, name='edit_post'),
-    path('posts/<slug:slug>/delete/', post.delete_post, name='delete_post'),
     path('posts/<slug:slug>/like/', post.like_post, name='like_post'),
-    path('posts/<slug:slug>/comment/add/', add_comment, name='add_comment'),
     path('signup/', user.user_register, name='signup'),
     path('users/<int:user_id>/', user.user_profile, name='user_profile'),
     path('users/<int:user_id>/edit/', user.edit_profile, name='edit_profile'),
     path('login/', user.custom_user_login, name='login'),
     path('search', post.search_results, name='search_results'),
     path('logout/', user.user_logout, name='logout'),
-    path('contact/', post.contact_view, name='contact_view'),
 ]
