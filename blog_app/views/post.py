@@ -12,7 +12,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 def post_list(request):
     all_posts_list = Post.objects.filter(status='published').order_by('-created_at')
-    paginator = Paginator(all_posts_list, per_page=10)
+    paginator = Paginator(all_posts_list, per_page=1)
 
     page_number = request.GET.get('page')
     try:
@@ -22,14 +22,16 @@ def post_list(request):
     except EmptyPage:
         posts_page_obj = paginator.page(paginator.num_pages)
 
-    context = {'page_obj': posts_page_obj}
+    context = {'posts': posts_page_obj}
     
-    return render(request, 'blog_app/post/post_list.html', context)
+    return render(request, 'blog_app/post/list.html', context)
 
 
 
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt  # Allows AJAX requests without CSRF validation
 @login_required
-@require_POST
 def like_post(request, slug):
     post = get_object_or_404(Post, slug=slug, status='published')
     user = request.user
@@ -41,9 +43,9 @@ def like_post(request, slug):
     else:
         liked = True
 
-    like_count = post.likes.count()
+    return JsonResponse({'liked': liked, 'like_count': post.likes.count()})
 
-    return JsonResponse({'liked':liked, 'like_count': like_count})
+
 
 
 def post_detail(request, slug):

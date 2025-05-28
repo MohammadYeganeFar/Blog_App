@@ -7,4 +7,26 @@
     <h2>{{ post.content }}</h2>
     <a href="">Comments</a>
     <h5>542 Likes</h5>
-{% endblock %}
+    <button id="like-btn" data-slug="{{ post.slug }}">
+        👍 <span id="like-count">{{ post.likes.count }}</span>
+    </button>
+    
+    <script>
+        document.getElementById("like-btn").addEventListener("click", function() {
+            const slug = this.getAttribute("data-slug");
+        
+            fetch(`like/`, {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": "{{ csrf_token }}",
+                    "Content-Type": "application/json"
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("like-count").textContent = data.like_count;
+            });
+        });
+    </script>
+    {% endblock %}
+        
