@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Posts list</title>
+</head>
+
+<body>
+    {% for post in posts %}
+    {% if post.is_published %}
+    Title: {{ post.title }}
+    <br>
+    Content: {{ post.content }}
+    <br>
+    <h3>------</h3>
+    {% endif %}
+    {% endfor %}
+</body>
+
+</html>
