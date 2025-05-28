@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required
 def user_register(request):
     if request.user.is_authenticated:
         messages.info(request, "You are already logged in.")
-        return redirect('blog_app:list_post')
+        return redirect('blog_app:post_list')
     
     if request.method == 'POST':
         form = UserRegistration(request.POST)
@@ -19,7 +19,7 @@ def user_register(request):
             user = form.save()
             login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             messages.success(request, f'Registration successful, {user.username}! You are now logged in.')
-            return redirect('blog_app:list_post')
+            return redirect('blog_app:post_list')
         
         else:
             error_messages = []
@@ -38,7 +38,7 @@ def user_register(request):
     else:
         form = UserRegistration()
     
-    return render(request, 'user/register.html', {'form': form})
+    return render(request, 'registration/signup.html', {'form': form})
 
 
 def custom_user_login(request):
@@ -61,12 +61,12 @@ def custom_user_login(request):
             message = 'wrong form!'
             
         context = {'form': form, 'message': message}   
-        return render(request, 'user/custom_login.html', context=context) 
+        return render(request, 'blog_app/user/custom_login.html', context=context) 
     
     form = CustomLoginForm()
     context = {'form': form}
     
-    return render(request, 'user/custom_login.html', context=context) 
+    return render(request, 'blog_app/user/custom_login.html', context=context) 
 
 
 def user_logout(request):
@@ -90,7 +90,7 @@ def user_profile(request, user_id):
     'profile_user': profile_user,
     'user_posts': user_posts,
     }
-    return render(request, 'user/profile_detail.html', context)
+    return render(request, 'blog_app/user/user_profile.html', context)
 
 
 @login_required
@@ -101,14 +101,14 @@ def edit_profile(request, user_id):
         messages.error(request, "sorry! you don't have permission for this!!!")
         if hasattr(request.user, 'id'):
              return redirect('blog_app:user_profile', user_id=request.user.id)
-        return redirect('blog_app:list_post')
+        return redirect('blog_app:post_list')
 
     if request.method == 'POST':
         form = UserProfile(request.POST, request.FILES, instance=user_to_edit)
         if form.is_valid():
             form.save()
             messages.success(request, 'Your profile updated successfully!')
-            return redirect('blog_app:edit_profile', user_id=user_to_edit.id)
+            return redirect('blog_app:user_profile_form.html', user_id=user_to_edit.id)
         else:
             error_list = []
             for field, errors in form.errors.items():
@@ -121,4 +121,4 @@ def edit_profile(request, user_id):
         'form': form,
         'profile_user': user_to_edit
     }
-    return render(request, 'user/edit_profile.html', context)
+    return render(request, 'blog_app/user/user_profile_form.html', context)
