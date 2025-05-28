@@ -19,6 +19,7 @@ urlpatterns = [
     path('users/<int:user_id>/', user.user_profile, name='user_profile'),
     path('users/<int:user_id>/edit/', user.edit_profile, name='edit_profile'),
     path('login/', user.custom_user_login, name='login'),
+    path('search', post.search_results, name='search_results'),
     path('logout/', user.user_logout, name='logout'),
     path('contact/', post.contact_view, name='contact_view'),
 ]
