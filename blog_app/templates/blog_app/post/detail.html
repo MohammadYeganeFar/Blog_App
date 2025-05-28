@@ -5,6 +5,12 @@
     <h4>By {{ post.author.username }}</h4>
     <h5>Publisched at: {{ post.created_at}}</h5>
     <h2>{{ post.content }}</h2>
+    <ul>
+        <h4>Tags:</h4>
+        {% for tag in post.tags.all %}
+           <li>{{ tag }}</li>
+        {% endfor %}
+    </ul>
     <a href="">Comments</a>
     <h5>542 Likes</h5>
     <button id="like-btn" data-slug="{{ post.slug }}">
