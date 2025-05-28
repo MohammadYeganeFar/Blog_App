@@ -16,7 +16,8 @@
 <ul>
     {% for post in page_obj %}
     <li>
-        <h3>{{ post.title }}</h3>
+        <h3><a href="{% url 'blog_app:post_detail' username=post.author.username slug=post.slug %}">{{ post.title }}</a>
+        </h3>
         <p>{{ post.content|truncatewords:30 }}</p>
     </li>
     {% endfor %}
