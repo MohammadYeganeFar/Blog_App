@@ -18,4 +18,4 @@ def contact_view(request):
         'form': form,
         'page_title': "contact_us"
     }
-    return render(request, 'blog_app/contact/contact_page.html', context)
+    return render(request, 'blog_app/contact.html', context)
