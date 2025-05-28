@@ -30,7 +30,7 @@ class TagAdmin(BaseAdmin):
 @admin.register(Comment)
 class CommentAdmin(BaseAdmin):
    list_display = ('post', 'user', 'content')
-   search_fields = ('user', 'content')
+   search_fields = ('content',)
    list_filter = ('user', 'post')
     
 
