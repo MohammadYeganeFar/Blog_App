@@ -8,6 +8,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import Q
 
 
 def post_list(request):
@@ -76,21 +77,12 @@ def post_detail(request, slug):
 
 def search_results(request):
     search_form = SearchForm(request.GET)
-    query = request.GET.get('q', '').strip()
+    query = request.GET.get('q')
     posts = Post.objects.none()
 
     if query:
-        search_query = SearchQuery(query)
-        search_vector = SearchVector('title') + SearchVector('content')
+        posts = Post.objects.filter(Q(title__contains=query) | Q(content__contains=query))
         
-        posts = Post.objects.annotate(
-            search=search_vector
-        ).filter(search=search_query)
-
-        if not posts.exists():
-            messages.info(request, f"No posts found for '{query}'.")
-
-
     paginator = Paginator(posts, 5)
     page_number = request.GET.get('page')
 
