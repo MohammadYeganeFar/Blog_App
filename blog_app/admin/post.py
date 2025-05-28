@@ -4,6 +4,7 @@ from blog_app.models import Post
 from blog_app.models import Like
 from blog_app.models import Tag
 from blog_app.models import Comment
+from blog_app.models import Comment
  
 @admin.register(Post)
 class PostAdmin(BaseAdmin):
@@ -15,6 +16,9 @@ class PostAdmin(BaseAdmin):
 
 @admin.register(Like)
 class LikeAdmin(BaseAdmin):
+    list_display = ('user', 'post')
+    search_fields = ('user', 'post')
+    list_filter = ('user',)
     list_display = ('user', 'post')
     search_fields = ('user', 'post')
     list_filter = ('user',)
