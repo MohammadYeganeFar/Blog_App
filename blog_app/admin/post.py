@@ -3,7 +3,7 @@ from blog_app.admin import BaseAdmin
 from blog_app.models import Post
 from blog_app.models import Like
 from blog_app.models import Tag
-
+from blog_app.models import Comment
  
 @admin.register(Post)
 class PostAdmin(BaseAdmin):
@@ -15,15 +15,23 @@ class PostAdmin(BaseAdmin):
 
 @admin.register(Like)
 class LikeAdmin(BaseAdmin):
-    list_display = ('username', 'title', 'created_at')
-    search_fields = ('username', 'title')
-    list_filter = ('created_at', 'author')
+    list_display = ('user', 'post')
+    search_fields = ('user', 'post')
+    list_filter = ('user',)
 
 
 @admin.register(Tag)
 class TagAdmin(BaseAdmin):
-    list_display = ('tag_name', 'created_at')
-    search_fields = ('tag_name')
-    list_filter = ('created_at')
+    list_display = ('tag_name',)
+    search_fields = ('tag_name',)
+    list_filter = ('tag_name',)
     
     
+@admin.register(Comment)
+class CommentAdmin(BaseAdmin):
+   list_display = ('post', 'user', 'content')
+   search_fields = ('user', 'content')
+   list_filter = ('user', 'post')
+    
+
+ 
