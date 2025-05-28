@@ -14,7 +14,7 @@ class UserRegistration(forms.ModelForm):
 
     class Meta:
         model = CustomUser
-        fields = ['username', 'email', 'password']
+        fields = ['username', 'first_name', 'last_name', 'email', 'password']
 
     
 from blog_app.models.user import CustomUser

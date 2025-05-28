@@ -2,6 +2,7 @@ from django.urls import path
 from blog_app.views import post
 from blog_app.views import user
 from blog_app.views import add_comment
+from blog_app.views.contact_views import contact_view
 
 
 app_name = 'blog_app'
@@ -17,4 +18,6 @@ urlpatterns = [
     path('login/', user.custom_user_login, name='login'),
     path('search', post.search_results, name='search_results'),
     path('logout/', user.user_logout, name='logout'),
+    path('contact/',contact_view, name='contact_view'),
+
 ]
