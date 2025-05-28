@@ -6,13 +6,13 @@
   {% for post in posts %}
   <li>
     <h3>
-      <a href="{% url 'blog_app:post_detail' slug=post.slug %}"
+      <a href="{% url 'blog_app:post_detail' username=post.author.username slug=post.slug %}"
         >{{ post.title }}</a
       >
     </h3>
     <p>
       By:
-      <a href="{% url 'blog_app:user_profile' user_id=post.author.id %}"
+      <a href="{% url 'blog_app:user_profile'  username=post.author.username %}"
         >{{ post.author.username }}</a
       >
       on {{ post.created_at|date:"F d, Y" }}

@@ -42,7 +42,7 @@
   
   {% if request.user == profile_user or request.user.is_staff %}
   <p>
-    <a href="{% url 'blog_app:edit_profile' user_id=profile_user.id %}"
+    <a href="{% url 'blog_app:edit_profile' username=profile_user.username %}"
       >Edit Profile</a
     >
   </p>
@@ -56,7 +56,7 @@
     {% for post in user_posts %}
     <li>
       <h4>
-        <a href="{% url 'blog_app:post_detail' slug=post.slug %}"
+        <a href="{% url 'blog_app:post_detail' username=post.author.username slug=post.slug %}"
           >{{ post.title }}</a
         >
       </h4>
@@ -68,7 +68,7 @@
       </p>
       <p>
         {{ post.content|striptags|truncatewords:25 }} {% if post.content|wordcount > 25 %}
-        <a href="{% url 'blog_app:post_detail' slug=post.slug %}">Read more...</a>
+        <a href="{% url 'blog_app:post_detail' username=post.author.username slug=post.slug %}">Read more...</a>
         {% endif %}
       </p>
       <p>
