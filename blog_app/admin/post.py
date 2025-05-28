@@ -10,7 +10,7 @@ from blog_app.models import Comment
 @admin.register(Post)
 class PostAdmin(BaseAdmin):
    list_display = ('title', 'author', 'status', 'created_at')
-   search_fields = ('title', 'content', 'author')
+   search_fields = ('title', 'content', 'author__username')
    list_filter = ('status', 'tags', 'author')
 
 
