@@ -1,4 +1,4 @@
-{% extends 'blog_app/base.html' %} {# Or "blog_app/base.html" if that's your base path #}
+{% extends 'blog_app/base.html' %}
 
 {% block title %}{{ post.title }} - Blog App{% endblock %}
 
@@ -7,7 +7,7 @@
         <h4>By: <a href="{% url 'blog_app:user_profile' username=post.author.username %}">{{ post.author.username }}</a></h4>
     <h5>Published at: {{ post.created_at|date:"F d, Y, P" }}</h5>
     <hr>
-    <div> {# Changed h2 to div for content block #}
+    <div>
         {{ post.content|linebreaks }}
     </div>
     <hr>
@@ -22,12 +22,10 @@
     <hr>
     {% endif %}
 
-    {# Removed the placeholder <a href="">Comments</a> and static <h5>542 Likes</h5> #}
-
     <div class="post-interactions">
         {% if user.is_authenticated %}
             <button id="like-btn" data-slug="{{ post.slug }}">
-                Like <!-- Since is_liked is not in context, default to "Like" -->
+                Like
             </button>
             <span id="like-count-display">👍 {{ post.likes.count }}</span> Likes
         {% else %}
@@ -66,18 +64,10 @@ document.addEventListener("DOMContentLoaded", function() {
     const likeCountDisplay = document.getElementById("like-count-display");
 
     if (likeButton) {
-        // Since 'is_liked' is not passed from the view, we can't set initial "Unlike" text.
-        // We could fetch initial like status here, or just let the first click handle it.
-        // For simplicity, we'll assume first click sets the state.
 
         likeButton.addEventListener("click", function() {
             const slug = this.dataset.slug;
-            // The username for the URL should be the post's author's username
             const postAuthorUsername = "{{ post.author.username }}";
-            // The `username` variable from context is the one from the URL,
-            // which should be the same as post.author.username for this view.
-            // Using post.author.username is more direct.
-
             const fetchURL = `/blog_app/@${postAuthorUsername}/${slug}/like/`;
 
             fetch(fetchURL, {
@@ -100,7 +90,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 if (likeCountDisplay) {
                     likeCountDisplay.innerHTML = `👍 ${data.like_count}`;
                 }
-                // Update button text based on the 'liked' status returned from the server
                 likeButton.textContent = data.liked ? "Unlike" : "Like";
             })
             .catch(error => {
