@@ -79,8 +79,8 @@ def user_logout(request):
     return redirect('blog_app:post_list')
 
 
-def user_profile(request, user_id):
-    profile_user = get_object_or_404(CustomUser, pk=user_id)
+def user_profile(request, username):
+    profile_user = get_object_or_404(CustomUser, username=username)
     user_posts = Post.objects.filter(
         author=profile_user,
         status='published'
@@ -94,21 +94,22 @@ def user_profile(request, user_id):
 
 
 @login_required
-def edit_profile(request, user_id):
-    user_to_edit = get_object_or_404(CustomUser, pk=user_id)
+def edit_profile(request, username):
+    user_to_edit = get_object_or_404(CustomUser, username=username)
 
     if not (request.user == user_to_edit or request.user.is_staff):
         messages.error(request, "sorry! you don't have permission for this!!!")
         if hasattr(request.user, 'id'):
-             return redirect('blog_app:user_profile', user_id=request.user.id)
+             return redirect('blog_app:user_profile', request.user.username)
         return redirect('blog_app:post_list')
 
     if request.method == 'POST':
         form = UserProfile(request.POST, request.FILES, instance=user_to_edit)
         if form.is_valid():
             form.save()
+            new_username = form.cleaned_data['username']
             messages.success(request, 'Your profile updated successfully!')
-            return redirect('blog_app:user_profile_form.html', user_id=user_to_edit.id)
+            return redirect('blog_app:user_profile', username=new_username)
         else:
             error_list = []
             for field, errors in form.errors.items():

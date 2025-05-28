@@ -8,11 +8,11 @@ from blog_app.views.contact_views import contact_view
 app_name = 'blog_app'
 
 urlpatterns = [
-    path('', post.post_list, name='post_list_root'),
+    path('', post.post_list, name='post_list'),
     path('@<str:username>/<slug:slug>/like/', post.like_post, name='like_post'),
-    path('/signup/', user.user_register, name='signup'),
-    path('users/<int:user_id>/', user.user_profile, name='user_profile'),
-    path('users/<int:user_id>/edit/', user.edit_profile, name='edit_profile'),
+    path('account/signup/', user.user_register, name='signup'),
+    path('account/@<str:username>/', user.user_profile, name='user_profile'),
+    path('account/@<str:username>/edit/', user.edit_profile, name='edit_profile'),
     path('login/', user.custom_user_login, name='login'),
     path('search', post.search_results, name='search_results'),
     path('logout/', user.user_logout, name='logout'),
