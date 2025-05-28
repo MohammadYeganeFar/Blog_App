@@ -19,9 +19,7 @@ class LikeAdmin(BaseAdmin):
     list_display = ('user', 'post')
     search_fields = ('user', 'post')
     list_filter = ('user',)
-    list_display = ('user', 'post')
-    search_fields = ('user', 'post')
-    list_filter = ('user',)
+   
 
 
 @admin.register(Tag)
