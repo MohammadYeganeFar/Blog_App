@@ -6,7 +6,7 @@
   {% for post in posts %}
   <li>
     <h3>
-      <a href="{% url 'blog_app:post_detail' slug=post.slug %}"
+      <a href="{% url 'blog_app:post_detail' username=post.author.username slug=post.slug %}"
         >{{ post.title }}</a
       >
     </h3>
