@@ -7,16 +7,25 @@ from blog_app.forms.search import SearchForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from django.contrib import messages
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 def post_list(request):
-    posts = Post.objects.all()
-    context = {'posts': posts}
-    return render(
-        request,
-        'blog_app/post/post_list.html',
-        context
-    )
+    all_posts_list = Post.objects.filter(status='published').order_by('-created_at')
+    paginator = Paginator(all_posts_list, per_page=10)
+
+    page_number = request.GET.get('page')
+    try:
+        posts_page_obj = paginator.page(page_number)
+    except PageNotAnInteger:
+        posts_page_obj = paginator.page(1)
+    except EmptyPage:
+        posts_page_obj = paginator.page(paginator.num_pages)
+
+    context = {'page_obj': posts_page_obj}
+    
+    return render(request, 'blog_app/post/post_list.html', context)
+
 
 
 @login_required
