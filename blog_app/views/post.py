@@ -48,14 +48,14 @@ def create_post(request):
             messages.error(request, 'Invalid form!')
             return render(
                 request,
-                'blog_app/post/create_post.html',
+                'blog_app/post/create.html',
                 {'form': form}
             )
     else:
         form = PostForm()
         return render(
             request,
-            'blog_app/post/create_post.html',
+            'blog_app/post/create.html',
             {'form': form}
         )
 

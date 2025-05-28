@@ -4,28 +4,36 @@ from django.views.decorators.http import require_POST
 from django.contrib import messages
 from blog_app.models import Post
 from blog_app.forms import CommentForm
+from django.shortcuts import render, get_object_or_404, redirect
+
 
 @login_required
-@require_POST
 def add_comment(request, slug):
     post = get_object_or_404(Post, slug=slug, status='published')
-    
-    form = CommentForm(request.POST)
 
-    if form.is_valid():
-        comment = form.save(commit=False)
-        comment.post = post
-        comment.user = request.user
-        comment.save()
-        messages.success(request, 'Your comment added successfully.')
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.user = request.user
+            comment.save()
+            messages.success(request, 'Your comment was added successfully.')
+            return redirect('blog_app:post_detail', username=request.user.username ,slug=post.slug)
+        else:
+            error_summary = []
+            for field, errors in form.errors.items():
+                label = field.capitalize() if field != '__all__' else 'Form'
+                error_summary.append(f"{label}: {', '.join(errors)}")
+            messages.error(request, f"Error! Please retry: {'; '.join(error_summary)}")
     else:
-        error_summary = []
-        for field, errors in form.errors.items():
-            if field != '__all__':
-                label = field.capitalize() 
-            else:
-                label = "Form"
-            error_summary.append(f"{label}: {', '.join(errors)}")
-        messages.error(request, f"error! please retry if you want: {' '.join(error_summary)}")
+        form = CommentForm()
 
-    return redirect('blog_app:post_detail', slug=post.slug)
+    return render(
+        request,
+        'blog_app/post/_comments.html',
+        {
+            'form': form,
+            'post': post,
+        }
+    )

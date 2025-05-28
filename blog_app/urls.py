@@ -1,7 +1,7 @@
 from django.urls import path
 from blog_app.views import post
 from blog_app.views import user
-from blog_app.views import add_comment
+from blog_app.views.add_comment import add_comment
 from blog_app.views.contact_views import contact_view
 
 
@@ -20,4 +20,5 @@ urlpatterns = [
     path('@<str:username>/<slug:slug>/', post.post_detail, name='post_detail'),
     path('new/', post.create_post, name='create_post'),
     path('<slug:slug>/edit/', post.edit_post, name='edit_post'),
+    path('<slug:slug>/add_comment/', add_comment, name='add_comment'),
     ]
