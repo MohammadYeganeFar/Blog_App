@@ -9,7 +9,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.urls import reverse
 from blog_app.models import Tag
-from blog_app.forms.post import Post as PostForm
+from blog_app.forms.post import PostForm
 
 
 
@@ -111,7 +111,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt  # Allows AJAX requests without CSRF validation
 @login_required
-def like_post(request, slug):
+def like_post(request, username, slug):
     post = get_object_or_404(Post, slug=slug, status='published')
     user = request.user
     like_instance, created = Like.objects.get_or_create(post=post, user=user)
@@ -124,7 +124,7 @@ def like_post(request, slug):
 
     return JsonResponse({'liked': liked, 'like_count': post.likes.count()})
 
-def post_detail(request, user, slug):
+def post_detail(request, username, slug):
     post = get_object_or_404(Post, slug=slug)
     recently_viewed_posts_slugs = request.session.get('recently_viewed', [])
 
@@ -140,6 +140,7 @@ def post_detail(request, user, slug):
     context = {
         'post': post,
         'recently_viewed_posts': recent_posts_objects,
+        'username': username
     }
     return render(
         request,
