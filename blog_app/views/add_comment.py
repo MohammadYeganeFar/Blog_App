@@ -28,4 +28,4 @@ def add_comment(request, slug):
             error_summary.append(f"{label}: {', '.join(errors)}")
         messages.error(request, f"error! please retry if you want: {' '.join(error_summary)}")
 
-    return redirect('blog_app:post_detail', slug=post.slug)
+    return redirect('blog_app:post_detail', username=post.author.username, slug=post.slug)

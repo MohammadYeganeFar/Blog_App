@@ -1,38 +1,113 @@
-{% extends 'blog_app/base.html' %}
+{% extends 'blog_app/base.html' %} {# Or "blog_app/base.html" if that's your base path #}
+
+{% block title %}{{ post.title }} - Blog App{% endblock %}
 
 {% block content %}
     <h1>{{ post.title }}</h1>
-    <h4>By {{ post.author.username }}</h4>
-    <h5>Publisched at: {{ post.created_at}}</h5>
-    <h2>{{ post.content }}</h2>
+        <h4>By: <a href="{% url 'blog_app:user_profile' username=post.author.username %}">{{ post.author.username }}</a></h4>
+    <h5>Published at: {{ post.created_at|date:"F d, Y, P" }}</h5>
+    <hr>
+    <div> {# Changed h2 to div for content block #}
+        {{ post.content|linebreaks }}
+    </div>
+    <hr>
+
+    {% if post.tags.all %}
+    <h4>Tags:</h4>
     <ul>
-        <h4>Tags:</h4>
         {% for tag in post.tags.all %}
-           <li>{{ tag }}</li>
+           <li><a href="{% url 'blog_app:search_results' %}?q={{ tag.tag_name|urlencode }}">{{ tag.tag_name }}</a></li>
         {% endfor %}
     </ul>
-    <a href="">Comments</a>
-    <h5>542 Likes</h5>
-    <button id="like-btn" data-slug="{{ post.slug }}">
-        👍 <span id="like-count">{{ post.likes.count }}</span>
-    </button>
-    
-    <script>
-        document.getElementById("like-btn").addEventListener("click", function() {
-            const slug = this.getAttribute("data-slug");
-        
-            fetch(`like/`, {
+    <hr>
+    {% endif %}
+
+    {# Removed the placeholder <a href="">Comments</a> and static <h5>542 Likes</h5> #}
+
+    <div class="post-interactions">
+        {% if user.is_authenticated %}
+            <button id="like-btn" data-slug="{{ post.slug }}">
+                Like <!-- Since is_liked is not in context, default to "Like" -->
+            </button>
+            <span id="like-count-display">👍 {{ post.likes.count }}</span> Likes
+        {% else %}
+            <span>👍 {{ post.likes.count }} Likes</span>
+            <p><a href="{% url 'blog_app:login' %}?next={{ request.path }}">Log in</a> to like.</p>
+        {% endif %}
+    </div>
+    <hr>
+
+    {% if recently_viewed_posts %}
+    <section class="recently-viewed-posts">
+        <h4>Recently Viewed:</h4>
+        <ul>
+            {% for r_post in recently_viewed_posts %}
+                <li><a href="{% url 'blog_app:post_detail' username=r_post.author.username slug=r_post.slug %}">{{ r_post.title }}</a></li>
+            {% empty %}
+                <li>No other recently viewed posts.</li>
+            {% endfor %}
+        </ul>
+    </section>
+    <hr>
+    {% endif %}
+
+    {% if user.is_authenticated and user == post.author or user.is_staff %}
+    <div class="post-admin-actions">
+        <a href="{% url 'blog_app:edit_post' username=post.author.username slug=post.slug %}" class="button-edit">Edit Post</a>
+    </div>
+    {% endif %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const likeButton = document.getElementById("like-btn");
+    const likeCountDisplay = document.getElementById("like-count-display");
+
+    if (likeButton) {
+        // Since 'is_liked' is not passed from the view, we can't set initial "Unlike" text.
+        // We could fetch initial like status here, or just let the first click handle it.
+        // For simplicity, we'll assume first click sets the state.
+
+        likeButton.addEventListener("click", function() {
+            const slug = this.dataset.slug;
+            // The username for the URL should be the post's author's username
+            const postAuthorUsername = "{{ post.author.username }}";
+            // The `username` variable from context is the one from the URL,
+            // which should be the same as post.author.username for this view.
+            // Using post.author.username is more direct.
+
+            const fetchURL = `/blog_app/@${postAuthorUsername}/${slug}/like/`;
+
+            fetch(fetchURL, {
                 method: "POST",
                 headers: {
                     "X-CSRFToken": "{{ csrf_token }}",
-                    "Content-Type": "application/json"
-                }
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(text => {
+                        throw new Error(`Network response was not ok: ${response.status} ${response.statusText}. Body: ${text}`);
+                    });
+                }
+                return response.json();
+            })
             .then(data => {
-                document.getElementById("like-count").textContent = data.like_count;
+                if (likeCountDisplay) {
+                    likeCountDisplay.innerHTML = `👍 ${data.like_count}`;
+                }
+                // Update button text based on the 'liked' status returned from the server
+                likeButton.textContent = data.liked ? "Unlike" : "Like";
+            })
+            .catch(error => {
+                console.error("Error liking post:", error);
             });
         });
-    </script>
-    {% endblock %}
-        
+    }
+});
+</script>
+{% endblock %}
