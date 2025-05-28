@@ -6,6 +6,9 @@ from blog_app.models.user import TimeStampModel, CustomUser
 class Tag(models.Model):
     tag_name = models.CharField(max_length=10)
 
+    def __str__(self):
+        return self.tag_name
+
 
 class Post(TimeStampModel):
     STATUS_CHOICES = {
