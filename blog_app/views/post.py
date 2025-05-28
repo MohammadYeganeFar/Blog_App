@@ -1,6 +1,7 @@
 from django.http import JsonResponse
+
 from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from blog_app.models import Post, Like
 from blog_app.forms.search import SearchForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -27,6 +28,7 @@ def set_tags(tags_list, post):
     print(f'tags_objects: {tags_objects}')
     post.tags.set(tags_objects)
 
+@permission_required('blog_app.publish_post')
 def create_post(request):
     user = request.user
     if request.method == "POST":

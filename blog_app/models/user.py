@@ -25,3 +25,9 @@ class CustomUser(TimeStampModel, AbstractUser):
     
     def __str__(self):
         return self.get_full_name()
+    
+    class Meta:
+        permissions = [
+            ('publish_post', 'Can publish post'),
+            ('create_comment', 'Can create comment'),
+            ]
