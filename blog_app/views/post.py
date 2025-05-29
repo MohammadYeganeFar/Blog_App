@@ -15,6 +15,7 @@ from blog_app.forms.post import PostForm, CommentForm
 from django.views.decorators.csrf import csrf_exempt
 from blog_app.views.utils import clean_tags
 from blog_app.models.post import Post
+from blog_app.models.user import CustomUser
 
 
 @permission_required('blog_app.publish_post')
@@ -117,10 +118,18 @@ def like_post(request, username, slug):
 
 
 def post_detail(request, username, slug):
-    post = get_object_or_404(Post, author__username=username, slug=slug, status='published')
+    post = get_object_or_404(Post, author__username=username, slug=slug)
     comments = post.comments.all().order_by('created_at')
     comment_form = CommentForm()
     recently_viewed_posts_slugs = request.session.get('recently_viewed', [])
+
+    user_to_detail = get_object_or_404(CustomUser, username=username)
+
+    if not (request.user == user_to_detail or request.user.is_staff):
+        messages.error(request, "sorry! you don't have permission for this!!!")
+        if hasattr(request.user, 'id'):
+             return redirect('blog_app:user_profile', request.user.username)
+        return redirect('blog_app:post_list')
 
     if post.slug not in recently_viewed_posts_slugs:
         recently_viewed_posts_slugs.insert(0, post.slug)
@@ -151,7 +160,8 @@ def search_results(request):
     posts = Post.objects.none()
 
     if query:
-        posts = Post.objects.filter(Q(title__contains=query) | Q(content__contains=query))
+        posts = Post.objects.filter(
+        (Q(title__contains=query) | Q(content__contains=query)) & Q(status="published"))
         
         if not posts.exists():
             messages.info(request, f"No posts found for '{query}'.")
