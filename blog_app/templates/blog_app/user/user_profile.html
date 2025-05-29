@@ -50,9 +50,13 @@ profile_user.username }} - {{ block.super }}{% endblock %} {% block content %}
     {% for post in user_posts %}
     <li>
       <h4>
-        <a href="{% url 'blog_app:post_detail' username=post.author.username slug=post.slug %}"
-          >{{ post.title }}</a
-        >
+        {% if post.slug %}
+          <a href="{% url 'blog_app:post_detail' username=post.author.username slug=post.slug %}">
+            {{ post.title }}
+          </a>
+        {% else %}
+          <span>{{ post.title }} (this post has no slug)</span> 
+        {% endif %}
       </h4>
       <p>
         <small
