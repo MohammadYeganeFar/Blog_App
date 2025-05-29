@@ -89,7 +89,6 @@ def user_profile(request, username):
     profile_user = get_object_or_404(CustomUser, username=username)
     user_posts = Post.objects.filter(
         author=profile_user,
-        status='published'
         ).order_by('-created_at')
 
     context = {
