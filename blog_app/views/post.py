@@ -12,6 +12,7 @@ from django.db.models import Q
 from django.urls import reverse
 from blog_app.models import Tag
 from blog_app.forms.post import PostForm
+from django.views.decorators.csrf import csrf_exempt
 
 
 
@@ -38,7 +39,6 @@ def create_post(request):
             post = form.save(commit=False)
             post.author = user
             post.save()
-            # here we are adding tags to the post
             user_tags = form.cleaned_data['tags']
             clean_tags_list = clean_tags(user_tags)
             set_tags(clean_tags_list, post)
@@ -63,7 +63,7 @@ def create_post(request):
             {'form': form}
         )
 
-def edit_post(request, slug):
+def edit_post(request, username, slug):
     post = get_object_or_404(Post, slug=slug)
     user = request.user
 
@@ -72,12 +72,10 @@ def edit_post(request, slug):
         
         if form.is_valid():
             post = form.save(commit=False)
-            # here we are adding tags to the post
             user_tags = form.cleaned_data['tags']
             clean_tags_list = clean_tags(user_tags)
             set_tags(clean_tags_list, post)
             post.save()
-            # I always forget "returen" in "return redirect"
             return redirect(reverse('blog_app:post_detail', args=[user.username, post.slug]))
         else:
             return render(
@@ -95,7 +93,7 @@ def edit_post(request, slug):
         
 def post_list(request):
     all_posts_list = Post.objects.filter(status='published').order_by('-created_at')
-    paginator = Paginator(all_posts_list, per_page=1)
+    paginator = Paginator(all_posts_list, per_page=2)
 
     page_number = request.GET.get('page')
     try:
@@ -105,15 +103,12 @@ def post_list(request):
     except EmptyPage:
         posts_page_obj = paginator.page(paginator.num_pages)
 
-    context = {'posts': posts_page_obj}
+    context = {'posts': posts_page_obj, 'page_obj': posts_page_obj}
     
     return render(request, 'blog_app/post/list.html', context)
 
 
-
-from django.views.decorators.csrf import csrf_exempt
-
-@csrf_exempt  # Allows AJAX requests without CSRF validation
+@csrf_exempt
 @login_required
 def like_post(request, username, slug):
     post = get_object_or_404(Post, slug=slug, status='published')
@@ -128,8 +123,9 @@ def like_post(request, username, slug):
 
     return JsonResponse({'liked': liked, 'like_count': post.likes.count()})
 
+
 def post_detail(request, username, slug):
-    post = get_object_or_404(Post, slug=slug)
+    post = get_object_or_404(Post, author__username=username, slug=slug, status='published')
     recently_viewed_posts_slugs = request.session.get('recently_viewed', [])
 
     if post.slug not in recently_viewed_posts_slugs:
@@ -151,7 +147,6 @@ def post_detail(request, username, slug):
         'blog_app/post/detail.html',
         context=context
     )
-
 
 
 def search_results(request):

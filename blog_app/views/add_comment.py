@@ -30,11 +30,4 @@ def add_comment(request, slug):
     else:
         form = CommentForm()
 
-    return render(
-        request,
-        'blog_app/post/_comments.html',
-        {
-            'form': form,
-            'post': post,
-        }
-    )
+    return redirect('blog_app:post_detail', username=post.author.username, slug=post.slug)
