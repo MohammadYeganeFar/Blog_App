@@ -56,8 +56,7 @@ profile_user.username }} - {{ block.super }}{% endblock %} {% block content %}
       </h4>
       <p>
         <small
-          >Published on: {{ post.created_at|date:"F d, Y" }} | Status: {{
-          post.get_status_display }}</small
+          >Published on: {{ post.created_at|date:"F d, Y" }} | Status: {{ post.get_status_display }}</small
         >
       </p>
       <p>
