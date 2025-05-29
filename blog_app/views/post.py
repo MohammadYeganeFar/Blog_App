@@ -178,7 +178,8 @@ def search_results(request):
         'search_form': search_form,
         'query': query,
         'page_obj': page_obj,
-        'posts':posts
+        'posts':posts,
+        'username': request.user.username
     }
     return render(request, 'blog_app/post/search_results.html', context)
 

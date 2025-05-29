@@ -16,7 +16,12 @@
 <ul>
     {% for post in page_obj %}
     <li>
-        <h3><a href="{% url 'blog_app:post_detail' username=post.author.username slug=post.slug %}">{{ post.title }}</a>
+        <h3>
+            {% if username != '' %}
+                <a href="{% url 'blog_app:post_detail' username=post.author.username slug=post.slug %}">{{ post.title }}</a>
+            {% else %}
+                <a href="{% url 'blog_app:signup' %}">{{ post.title }}</a>
+            {% endif %}
         </h3>
         <p>{{ post.content|truncatewords:30 }}</p>
     </li>
