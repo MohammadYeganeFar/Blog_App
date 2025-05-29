@@ -62,7 +62,7 @@ def edit_post(request, username, slug):
             post = form.save(commit=False)
             user_tags = form.cleaned_data['tags']
             clean_tags_list = clean_tags(user_tags)
-            set_tags(clean_tags_list, post)
+            post.set_tags(clean_tags_list)
             post.save()
             return redirect(reverse('blog_app:post_detail', args=[user.username, post.slug]))
         else:
