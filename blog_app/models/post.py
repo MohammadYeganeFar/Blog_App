@@ -11,11 +11,11 @@ class Tag(models.Model):
 
 
 class Post(TimeStampModel):
-    STATUS_CHOICES = {
-        'published': 'Published',
-        'archived': 'Archived',
-        'drafted': 'Drafted'
-        }
+    STATUS_CHOICES = [
+        ('published', 'Published'),
+        ('archived', 'Archived'),
+        ('drafted', 'Drafted')
+    ]
     content = models.TextField()     
     title = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255, unique=True, blank=True)
