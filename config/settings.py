@@ -132,3 +132,7 @@ AUTH_USER_MODEL = 'blog_app.CustomUser'
 
 MEDIA_ROOT =  os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+LOGIN_URL = 'blog_app:login'
+LOGOUT_REDIRECT_URL = 'blog_app:post_list'
+LOGIN_REDIRECT_URL = 'blog_app:post_list'

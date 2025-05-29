@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, resolve_url
 from django.contrib.auth import logout, authenticate, login
 from blog_app.models import CustomUser, Post
 from blog_app.forms.user import CustomLoginForm
@@ -7,6 +7,7 @@ from django.contrib import messages
 from blog_app.forms.user import UserRegistration
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
+from django.conf import settings
 
 
 def user_register(request):
@@ -54,6 +55,11 @@ def custom_user_login(request):
             )
             if user :
                 login(request, user)
+                next_url = request.GET.get('next')
+                if next_url:
+                    return redirect(next_url)
+                else:
+                    return redirect(resolve_url(settings.LOGIN_REDIRECT_URL))
                 message = f'welcome {user.username}'
             else:
                 message = 'wrong data!'

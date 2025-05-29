@@ -8,7 +8,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 
 
 @login_required
-@permission_required('blog_app.create_comment')
+@permission_required('blog_app.create_comment', raise_exception=True)
 def add_comment(request, slug):
     post = get_object_or_404(Post, slug=slug, status='published')
 
@@ -20,7 +20,7 @@ def add_comment(request, slug):
             comment.user = request.user
             comment.save()
             messages.success(request, 'Your comment was added successfully.')
-            return redirect('blog_app:post_detail', username=request.user.username ,slug=post.slug)
+            return redirect('blog_app:post_detail', username=post.author.username ,slug=post.slug)
         else:
             error_summary = []
             for field, errors in form.errors.items():

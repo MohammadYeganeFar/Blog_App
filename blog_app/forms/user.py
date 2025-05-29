@@ -5,7 +5,7 @@ from blog_app.models.user import CustomUser
 
 class CustomLoginForm(forms.Form):
     username = forms.CharField(max_length=150)
-    password = forms.CharField(max_length=150)
+    password = forms.CharField(widget=forms.PasswordInput, max_length=150)
 
 
 class UserRegistration(forms.ModelForm):

@@ -34,7 +34,10 @@
         {% endif %}
     </div>
     <hr>
-
+    <section class="comments-section">
+        {% include "blog_app/post/_comments.html" with post=post form=comment_form %}
+    </section>
+    <hr>
     {% if recently_viewed_posts %}
     <section class="recently-viewed-posts">
         <h4>Recently Viewed:</h4>

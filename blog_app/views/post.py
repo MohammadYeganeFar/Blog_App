@@ -2,7 +2,7 @@ from django.http import JsonResponse
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required, permission_required
-from blog_app.models import Post, Like
+from blog_app.models import Post, Like, Comment
 from blog_app.forms.search import SearchForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
@@ -11,7 +11,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
 from django.urls import reverse
 from blog_app.models import Tag
-from blog_app.forms.post import PostForm
+from blog_app.forms.post import PostForm, CommentForm
 from django.views.decorators.csrf import csrf_exempt
 
 
@@ -126,6 +126,8 @@ def like_post(request, username, slug):
 
 def post_detail(request, username, slug):
     post = get_object_or_404(Post, author__username=username, slug=slug, status='published')
+    comments = post.comments.all().order_by('created_at')
+    comment_form = CommentForm()
     recently_viewed_posts_slugs = request.session.get('recently_viewed', [])
 
     if post.slug not in recently_viewed_posts_slugs:
@@ -135,10 +137,12 @@ def post_detail(request, username, slug):
     recent_posts_objects = Post.objects.filter(
         slug__in=request.session.get('recently_viewed', []), 
         status='published'
-    ).order_by('created_at') 
+    ).order_by('-created_at') 
 
     context = {
         'post': post,
+        'comments': comments,
+        'comment_form': comment_form,
         'recently_viewed_posts': recent_posts_objects,
         'username': username
     }

@@ -1,10 +1,10 @@
-{% if messages %}
+{% comment %} {% if messages %}
 <ul class="messages">
   {% for message in messages %}
   <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
   {% endfor %}
 </ul>
-{% endif %}
+{% endif %} {% endcomment %}
 
 <h3>Leave a Comment</h3>
 
@@ -30,7 +30,7 @@
 {% for comment in post.comments.all %}
 <div style="margin-bottom: 1rem;">
   <strong>{{ comment.user.username }}</strong>
-  <small>on {{ comment.created|date:"M d, Y H:i" }}</small>
+  <small>on {{ comment.created_at|date:"M d, Y H:i" }}</small>
   <p>{{ comment.content }}</p>
 </div>
 {% empty %}
