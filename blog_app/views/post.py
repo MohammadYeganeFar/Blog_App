@@ -41,19 +41,23 @@ def create_post(request):
             return render(
                 request,
                 'blog_app/post/create.html',
-                {'form': form}
+                {'form': form, 'is_editing': False}
             )
     else:
         form = PostForm()
         return render(
             request,
             'blog_app/post/create.html',
-            {'form': form}
+            {'form': form, 'is_editing': False}
         )
 
 def edit_post(request, username, slug):
-    post = get_object_or_404(Post, slug=slug)
+    post = get_object_or_404(Post, author__username=username, slug=slug)
     user = request.user
+
+    if not (user == post.author or user.is_staff):
+        messages.error(request, "You do not have permission to edit this post.")
+        return redirect('blog_app:post_detail', username=post.author.username, slug=post.slug)
 
     if request.method == 'POST':
         form = PostForm(request.POST, instance=post)
@@ -69,14 +73,14 @@ def edit_post(request, username, slug):
             return render(
                 request,
                 'blog_app/post/create.html',
-                {'form': form}
+                {'form': form, 'post':post, 'is_editing': True}
             )
     else:
         form = PostForm(instance=post)
         return render(
                 request,
                 'blog_app/post/create.html',
-                {'form': form}
+                {'form': form, 'post':post, 'is_editing': True}
             )
         
 def post_list(request):
