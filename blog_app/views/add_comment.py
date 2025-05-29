@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.views.decorators.http import require_POST
 from django.contrib import messages
 from blog_app.models import Post
@@ -8,6 +8,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 
 
 @login_required
+@permission_required('blog_app.create_comment')
 def add_comment(request, slug):
     post = get_object_or_404(Post, slug=slug, status='published')
 
