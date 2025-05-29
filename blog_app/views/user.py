@@ -18,6 +18,13 @@ def user_register(request):
     if request.method == 'POST':
         form = UserRegistration(request.POST)
         if form.is_valid():
+            # Cheking passwords
+            pw = form.cleaned_data['password']
+            pw_confirm = form.cleaned_data['password_confirm']
+
+            if pw != pw_confirm:
+                messages.error(request, 'Passwords are not same!')
+                return redirect('blog_app:signup')
             user = form.save(commit=False)
             user.set_password(form.cleaned_data['password']) 
             user.save()
