@@ -19,7 +19,7 @@ def user_register(request):
         form = UserRegistration(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            user.password = make_password(form.cleaned_data['password']) 
+            user.set_password(form.cleaned_data['password']) 
             user.save()
             login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             messages.success(request, f'Registration successful, {user.username}! You are now logged in.')
