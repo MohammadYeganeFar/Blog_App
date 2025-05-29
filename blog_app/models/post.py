@@ -4,7 +4,7 @@ from blog_app.models.user import TimeStampModel, CustomUser
 
 
 class Tag(models.Model):
-    tag_name = models.CharField(max_length=10)
+    tag_name = models.CharField(max_length=40)
 
     def __str__(self):
         return self.tag_name
@@ -47,7 +47,9 @@ class Comment(TimeStampModel):
     post = models.ForeignKey(Post, related_name='comments', on_delete=models.CASCADE)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     content = models.TextField()
-
+    
+    class Meta:
+        permissions = [('create_comment', 'Can create comment.')]
 
 class Like(TimeStampModel):
     post = models.ForeignKey(Post, related_name='likes', on_delete=models.CASCADE)
