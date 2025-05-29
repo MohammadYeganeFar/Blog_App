@@ -25,19 +25,7 @@ urlpatterns = [
     path('account/logout/', user.user_logout, name='logout'),
     path('account/@<str:username>/', user.user_profile, name='user_profile'),
     path('account/@<str:username>/edit/', user.edit_profile, name='edit_profile'),
-<<<<<<< HEAD
-    path('account/login/', user.custom_user_login, name='login'),
-    path('search', post.search_results, name='search_results'),
-    path('account/logout/', user.user_logout, name='logout'),
-    path('contact/',contact_view, name='contact_view'),
-    path('@<str:username>/<slug:slug>/', post.post_detail, name='post_detail'),
-    path('new/', post.create_post, name='create_post'),
-    path('<slug:slug>/edit/', post.edit_post, name='edit_post'),
-    path('<slug:slug>/add_comment/', add_comment, name='add_comment'),
-    ]
-=======
 
     # Other
     path('contact/', contact_view, name='contact_view'),
 ]
->>>>>>> 99eb0785dbf467c6103bedec1ebaffc6fc9de966
