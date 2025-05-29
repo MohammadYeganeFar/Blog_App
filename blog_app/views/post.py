@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-
+from blog_app.forms import CommentForm
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required, permission_required
 from blog_app.models import Post, Like, Comment
@@ -13,21 +13,9 @@ from django.urls import reverse
 from blog_app.models import Tag
 from blog_app.forms.post import PostForm, CommentForm
 from django.views.decorators.csrf import csrf_exempt
+from blog_app.views.utils import clean_tags
+from blog_app.models.post import Post
 
-
-
-
-def clean_tags(tag_string):
-    return [tag.strip() for tag in tag_string.split(',') if tag.strip()]
-
-def set_tags(tags_list, post):
-    tags_objects = []
-    print(f"tags_list: {tags_list}\n\nclean_tags_list: {tags_list}")
-    for tag_name in tags_list:
-        tag_object, created = Tag.objects.get_or_create(tag_name=tag_name)
-        tags_objects.append(tag_object)
-    print(f'tags_objects: {tags_objects}')
-    post.tags.set(tags_objects)
 
 @permission_required('blog_app.publish_post')
 def create_post(request):
@@ -41,7 +29,7 @@ def create_post(request):
             post.save()
             user_tags = form.cleaned_data['tags']
             clean_tags_list = clean_tags(user_tags)
-            set_tags(clean_tags_list, post)
+            post.set_tags(clean_tags_list)
             post.save()
             print(f'post.tags: {post.tags.all()}')
             return redirect(
@@ -179,3 +167,31 @@ def search_results(request):
         'posts':posts
     }
     return render(request, 'blog_app/post/search_results.html', context)
+
+
+@login_required
+@permission_required('blog_app.create_comment', raise_exception=True)
+def add_comment(request, slug):
+    post = get_object_or_404(Post, slug=slug, status='published')
+
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.user = request.user
+            comment.save()
+            messages.success(request, 'Your comment was added successfully.')
+            return redirect('blog_app:post_detail', username=post.author.username ,slug=post.slug)
+        else:
+            error_summary = []
+            for field, errors in form.errors.items():
+                label = field.capitalize() if field != '__all__' else 'Form'
+                error_summary.append(f"{label}: {', '.join(errors)}")
+            messages.error(request, f"Error! Please retry: {'; '.join(error_summary)}")
+    else:
+        form = CommentForm()
+
+    return redirect('blog_app:post_detail', username=post.author.username, slug=post.slug)
+
+

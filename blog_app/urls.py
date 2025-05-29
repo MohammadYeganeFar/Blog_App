@@ -1,7 +1,7 @@
 from django.urls import path
 from blog_app.views import post
 from blog_app.views import user
-from blog_app.views.add_comment import add_comment
+from blog_app.views.post import add_comment
 from blog_app.views.contact_views import contact_view
 
 

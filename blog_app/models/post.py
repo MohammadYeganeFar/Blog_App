@@ -26,7 +26,6 @@ class Post(TimeStampModel):
         default='Drafted'
     )
     tags = models.ManyToManyField(Tag)
-    is_published = models.BooleanField(default=False)
     
     def __str__(self):
         return f'{self.title}'
@@ -34,13 +33,22 @@ class Post(TimeStampModel):
     def save(self, *args, **kwargs):
         if not self.slug and self.title:
             self.slug = slugify(self.title)
-            
             original_slug = self.slug
             counter = 1
             while Post.objects.filter(slug=self.slug).exclude(pk=self.pk).exists():
                 self.slug = f'{original_slug}-{counter}'
                 counter += 1
         super().save(*args, **kwargs)
+
+    def set_tags(self, tags_list):
+        tags_objects = []
+        cleaned_tags = [tag.strip() for tag in tags_list if tag.strip()]
+        
+        for tag_name in cleaned_tags:
+            tag_object, _ = Tag.objects.get_or_create(tag_name=tag_name)
+            tags_objects.append(tag_object)
+
+        self.tags.set(tags_objects)
 
 
 class Comment(TimeStampModel):
