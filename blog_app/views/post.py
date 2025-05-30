@@ -14,6 +14,7 @@ from blog_app.views.utils import clean_tags
 from blog_app.models.user import CustomUser
 
 
+@login_required
 def create_post(request):
     user = request.user
     if request.method == "POST":
