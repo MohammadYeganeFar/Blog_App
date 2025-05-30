@@ -18,13 +18,12 @@ def user_register(request):
     if request.method == 'POST':
         form = UserRegistration(request.POST)
         if form.is_valid():
-            # Cheking passwords
             pw = form.cleaned_data['password']
             pw_confirm = form.cleaned_data['password_confirm']
 
             if pw != pw_confirm:
                 messages.error(request, 'Passwords are not same!')
-                return redirect('blog_app:signup')
+                return redirect('blog_app:signup', {'form': form})
             user = form.save(commit=False)
             user.set_password(form.cleaned_data['password']) 
             user.save()
@@ -32,17 +31,9 @@ def user_register(request):
             messages.success(request, f'Registration successful, {user.username}! You are now logged in.')
             return redirect('blog_app:post_list')
         else:
-            error_messages = []
-            for field, errors in form.errors.items():
-                for error in errors:
-                    if field == '__all__':
-                        error_messages.append(f"{error}")
-                    else:
-                        error_messages.append(f"{form.fields[field].label or field.capitalize()}: {error}")
-            if error_messages:
-                messages.error(request, "Please correct the errors below: " + "; ".join(error_messages))
-            else:
-                messages.error(request, 'Please correct the errors.')
+            messages.error(request, "Please correct the errors below.")
+            return render(request, 'registration/signup.html', {'form': form})
+
     else:
         form = UserRegistration()
 
@@ -50,6 +41,10 @@ def user_register(request):
 
 
 def custom_user_login(request):
+    if request.user.is_authenticated:
+        messages.info(request, "You are already logged in.")
+        return redirect('blog_app:post_list')
+
     if request.method == 'POST':
         form = CustomLoginForm(request.POST)            
         if form.is_valid():
@@ -60,21 +55,20 @@ def custom_user_login(request):
             username=username,
             password=password
             )
-            if user :
+            if user is not None:
                 login(request, user)
                 next_url = request.GET.get('next')
                 if next_url:
                     return redirect(next_url)
                 else:
                     return redirect(resolve_url(settings.LOGIN_REDIRECT_URL))
-                message = f'welcome {user.username}'
             else:
                 message = 'wrong data!'
         else:
             message = 'wrong form!'
             
         context = {'form': form, 'message': message}   
-        return render(request, 'blog_app/user/custom_login.html', context=context) 
+        return render(request, 'blog_app/user/custom_login.html', context=context)
     
     form = CustomLoginForm()
     context = {'form': form}

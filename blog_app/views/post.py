@@ -113,18 +113,20 @@ def like_post(request, username, slug):
 
 def post_detail(request, username, slug):
     post = get_object_or_404(Post, author__username=username, slug=slug)
+
+    if not request.user.is_authenticated:
+        messages.error(request, "You need to be logged in to view this post.")
+        login_url = reverse('blog_app:login')
+        return redirect(f'{login_url}?next={request.path}')
+
+    if post.status == 'drafted' and not (request.user == post.author or request.user.is_staff):
+        messages.error(request, "You do not have permission to view this draft.")
+        return redirect('blog_app:user_profile', username=request.user.username)
+    
     comments = post.comments.all().order_by('created_at')
     comment_form = CommentForm()
     recently_viewed_posts_slugs = request.session.get('recently_viewed', [])
-
-    user_to_detail = get_object_or_404(CustomUser, username=username)
-
-    if not (request.user == user_to_detail or request.user.is_staff):
-        messages.error(request, "sorry! you don't have permission for this!!!")
-        if hasattr(request.user, 'id'):
-             return redirect('blog_app:user_profile', request.user.username)
-        return redirect('blog_app:post_list')
-
+    
     if post.slug not in recently_viewed_posts_slugs:
         recently_viewed_posts_slugs.insert(0, post.slug)
         request.session['recently_viewed'] = recently_viewed_posts_slugs[:5] 
