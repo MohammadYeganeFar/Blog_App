@@ -23,7 +23,7 @@ def user_register(request):
 
             if pw != pw_confirm:
                 messages.error(request, 'Passwords are not same!')
-                return redirect('blog_app:signup', {'form': form})
+                return redirect('blog_app:signup')
             user = form.save(commit=False)
             user.set_password(form.cleaned_data['password']) 
             user.save()
