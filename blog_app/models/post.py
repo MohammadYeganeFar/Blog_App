@@ -1,13 +1,7 @@
 from django.db import models
 from django.utils.text import slugify
 from blog_app.models.user import TimeStampModel, CustomUser
-
-
-class Tag(models.Model):
-    tag_name = models.CharField(max_length=40)
-
-    def __str__(self):
-        return self.tag_name
+from taggit.managers import TaggableManager
 
 
 class Post(TimeStampModel):
@@ -25,7 +19,7 @@ class Post(TimeStampModel):
         choices=STATUS_CHOICES,
         default='Drafted'
     )
-    tags = models.ManyToManyField(Tag)
+    tags = TaggableManager(blank=True)
     
     def __str__(self):
         return f'{self.title}'
@@ -35,20 +29,17 @@ class Post(TimeStampModel):
             self.slug = slugify(self.title)
             original_slug = self.slug
             counter = 1
-            while Post.objects.filter(slug=self.slug).exclude(pk=self.pk).exists():
+            qs = Post.objects.filter(slug=self.slug)
+            if self.pk:
+                qs = qs.exclude(pk=self.pk)
+            while qs.exists():
                 self.slug = f'{original_slug}-{counter}'
                 counter += 1
+                qs = Post.objects.filter(slug=self.slug)
+                if self.pk:
+                    qs = qs.exclude(pk=self.pk)
+
         super().save(*args, **kwargs)
-
-    def set_tags(self, tags_list):
-        tags_objects = []
-        cleaned_tags = [tag.strip() for tag in tags_list if tag.strip()]
-        
-        for tag_name in cleaned_tags:
-            tag_object, _ = Tag.objects.get_or_create(tag_name=tag_name)
-            tags_objects.append(tag_object)
-
-        self.tags.set(tags_objects)
 
 
 class Comment(TimeStampModel):

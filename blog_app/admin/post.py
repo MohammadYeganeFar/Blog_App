@@ -2,9 +2,8 @@ from django.contrib import admin
 from blog_app.admin import BaseAdmin
 from blog_app.models import Post
 from blog_app.models import Like
-from blog_app.models import Tag
 from blog_app.models import Comment
-from blog_app.models import Comment
+from taggit.models import TaggedItem
  
  
 @admin.register(Post)
@@ -21,11 +20,11 @@ class LikeAdmin(BaseAdmin):
     list_filter = ('user',)
    
 
-@admin.register(Tag)
+@admin.register(TaggedItem)
 class TagAdmin(BaseAdmin):
-    list_display = ('tag_name',)
-    search_fields = ('tag_name',)
-    list_filter = ('tag_name',)
+    list_display = ('tag',)
+    search_fields = ('tag',)
+    list_filter = ('tag',)
     
     
 @admin.register(Comment)

@@ -1,20 +1,16 @@
 from django.http import JsonResponse
-from blog_app.forms import CommentForm
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required, permission_required
 from blog_app.models import Post, Like, Comment
 from blog_app.forms.search import SearchForm
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
 from django.urls import reverse
-from blog_app.models import Tag
 from blog_app.forms.post import PostForm, CommentForm
 from django.views.decorators.csrf import csrf_exempt
 from blog_app.views.utils import clean_tags
-from blog_app.models.post import Post
 from blog_app.models.user import CustomUser
 
 
@@ -28,11 +24,9 @@ def create_post(request):
             post = form.save(commit=False)
             post.author = user
             post.save()
-            user_tags = form.cleaned_data['tags']
+            user_tags = form.cleaned_data['tags_input']
             clean_tags_list = clean_tags(user_tags)
-            post.set_tags(clean_tags_list)
-            post.save()
-            print(f'post.tags: {post.tags.all()}')
+            post.tags.set(clean_tags_list)
             return redirect(
                 reverse(
                     'blog_app:post_detail',
@@ -64,23 +58,23 @@ def edit_post(request, username, slug):
         form = PostForm(request.POST, instance=post)
         
         if form.is_valid():
-            post = form.save(commit=False)
-            user_tags = form.cleaned_data['tags']
+            post = form.save()
+            user_tags = form.cleaned_data['tags_input']
             clean_tags_list = clean_tags(user_tags)
-            post.set_tags(clean_tags_list)
-            post.save()
-            return redirect(reverse('blog_app:post_detail', args=[user.username, post.slug]))
+            post.tags.set(clean_tags_list)
+            return redirect(reverse('blog_app:post_detail', args=[post.author.username, post.slug]))
         else:
             return render(
                 request,
-                'blog_app/post/create.html',
+                'blog_app/post/edit.html',
                 {'form': form, 'post':post, 'is_editing': True}
             )
     else:
-        form = PostForm(instance=post)
+        initial_tags = ", ".join([tag.name for tag in post.tags.all()])
+        form = PostForm(instance=post, initial={'tags_input': initial_tags})
         return render(
                 request,
-                'blog_app/post/create.html',
+                'blog_app/post/edit.html',
                 {'form': form, 'post':post, 'is_editing': True}
             )
         

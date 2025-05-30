@@ -5,13 +5,14 @@ from blog_app.models.post import Comment
 
 
 class PostForm(forms.ModelForm):
-    tags = forms.CharField(
+    tags_input = forms.CharField(
+        label="Tags",
         required=False,
         help_text="Enter tags separated by commas. Existing tags will be used, new tags will be created."
     )
     class Meta:
         model = Post
-        fields = ['title', 'content', 'status', 'tags']
+        fields = ['title', 'content', 'status']
         widgets = {
             'content': forms.Textarea(),
             'status': forms.Select(choices=Post.STATUS_CHOICES),

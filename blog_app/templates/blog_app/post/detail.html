@@ -16,7 +16,7 @@
     <h4>Tags:</h4>
     <ul>
         {% for tag in post.tags.all %}
-           <li><a href="{% url 'blog_app:search_results' %}?q={{ tag.tag_name|urlencode }}">{{ tag.tag_name }}</a></li>
+           <li><a href="{% url 'blog_app:search_results' %}?q={{ tag.name|urlencode }}">{{ tag.name }}</a></li>
         {% endfor %}
     </ul>
     <hr>
