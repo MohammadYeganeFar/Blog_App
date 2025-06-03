@@ -1,5 +1,4 @@
 from django import forms
-from django.core.exceptions import ValidationError
 from blog_app.models.user import CustomUser
 
 
@@ -17,9 +16,6 @@ class UserRegistration(forms.ModelForm):
         fields = ['username', 'first_name', 'last_name', 'email', 'password']
 
     
-from blog_app.models.user import CustomUser
-
-
 class UserProfile(forms.ModelForm):
     class Meta:
         model = CustomUser

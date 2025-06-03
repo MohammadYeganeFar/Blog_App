@@ -6,7 +6,6 @@ from blog_app.forms import UserProfile
 from django.contrib import messages
 from blog_app.forms.user import UserRegistration
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.hashers import make_password
 from django.conf import settings
 
 

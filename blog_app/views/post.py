@@ -1,9 +1,8 @@
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required, permission_required
-from blog_app.models import Post, Like, Comment
+from blog_app.models import Post, Like
 from blog_app.forms.search import SearchForm
-from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
@@ -11,7 +10,6 @@ from django.urls import reverse
 from blog_app.forms.post import PostForm, CommentForm
 from django.views.decorators.csrf import csrf_exempt
 from blog_app.views.utils import clean_tags
-from blog_app.models.user import CustomUser
 
 
 @login_required
