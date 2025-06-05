@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-i(h=+o%mo2a*5+39jag!7afi#*vy)l$awew3$m(anrq9p%8n^2')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(os.environ.get("DEBUG"))
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(",")
 
 
 # Application definition
@@ -78,12 +78,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'blog',
-        'USER': 'postgres',
-        'PASSWORD': '1',
-        'HOST': 'localhost',
-        'PORT': '5432'
+        'ENGINE': os.environ.get("DATABASE_ENGINE", "django.db.backends.postgresql"),
+        'NAME': os.environ.get("DATABASE_NAME", "blog"),
+        'USER': os.environ.get("DATABASE_USERNAME", "postgres"),
+        'PASSWORD': os.environ.get("DATABASE_PASSWORD", "password"),
+        'HOST': os.environ.get("DATABASE_HOST", "localhost"),
+        'PORT': os.environ.get("DATABASE_PORT", "5432")
     }
 }
 
